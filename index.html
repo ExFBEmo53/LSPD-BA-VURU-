@@ -1,1 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LSPD Başvuru</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1d3a;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #13294b;
+      padding: 25px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    h1 { text-align: center; }
+    label { margin-top: 10px; display: block; font-weight: bold; }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      background: #1e90ff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LSPD Başvuru</h1>
+    <form id="appForm">
+      <label>Ad Soyad</label>
+      <input required>
+
+      <label>Discord</label>
+      <input required>
+
+      <label>Yaş</label>
+      <input required>
+
+      <label>Kendinden Bahset</label>
+      <textarea required></textarea>
+
+      <label>Bize Ne Katabilirsin?</label>
+      <textarea required></textarea>
+
+      <button type="submit">Gönder</button>
+    </form>
+  </div>
+
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1467903453215854602/3mhXMFkfEhdaHdu-ges1NUc5BeGTLDBb5jCwuZK_7Hrdzl2yOy88F0_ORy40ILWiEbOn";
+
+    document.getElementById("appForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const data = document.querySelectorAll("input, textarea");
+
+      const payload = {
+        embeds: [{
+          title: "👮 Yeni LSPD Başvurusu",
+          color: 3447003,
+          fields: [
+            { name: "Ad Soyad", value: data[0].value },
+            { name: "Discord", value: data[1].value },
+            { name: "Yaş", value: data[2].value },
+            { name: "Kendinden Bahset", value: data[3].value },
+            { name: "Bize Ne Katabilirsin", value: data[4].value }
+          ]
+        }]
+      };
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        alert("Başvurun gönderildi!");
+        this.reset();
+      });
+    });
+  </script>
+</body>
+</html>
 
