@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LSPD Başvuru</title>
+  <title>LSPD Başvuru Formu</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,8 +22,15 @@
       max-width: 500px;
       box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
-    h1 { text-align: center; }
-    label { margin-top: 10px; display: block; font-weight: bold; }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
     input, textarea, select {
       width: 100%;
       padding: 8px;
@@ -32,8 +39,8 @@
       border: none;
     }
     button {
-      margin-top: 15px;
       width: 100%;
+      margin-top: 20px;
       padding: 12px;
       background: #1e90ff;
       border: none;
@@ -42,6 +49,15 @@
       font-size: 16px;
       cursor: pointer;
     }
+    button:hover {
+      background: #187bcd;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
@@ -49,53 +65,81 @@
     <h1>LSPD Başvuru</h1>
     <form id="appForm">
       <label>Ad Soyad</label>
-      <input required>
+      <input type="text" required />
 
-      <label>Discord</label>
-      <input required>
+      <label>Discord Kullanıcı Adı</label>
+      <input type="text" placeholder="isim#0000" required />
 
       <label>Yaş</label>
       <input required>
 
+      <label>FiveM Geçmişi</label>
+      <select required>
+        <option value="">Seçiniz</option>
+        <option>0-6 Ay</option>
+        <option>6-12 Ay</option>
+        <option>1+ Yıl</option>
+      </select>
+
       <label>Kendinden Bahset</label>
       <textarea required></textarea>
 
-      <label>Bize Ne Katabilirsin?</label>
-      <textarea required></textarea>
+      <label>Kendinden Bahset</label>
+      <textarea rows="4" placeholder="Kısaca kendini tanıt" required></textarea>
 
-      <button type="submit">Gönder</button>
+      <label>Bize Ne Katabilirsin?</label>
+      <textarea rows="4" placeholder="LSPD'ye katkıların neler olur?" required></textarea>
+
+      <label>Aktiflik (Günlük Saat)</label>
+      <input type="text" required />
+
+      <button type="submit">Başvuruyu Gönder</button>
     </form>
+    <div class="footer">Los Santos Police Department © FiveM</div>
   </div>
 
   <script>
     const webhookURL = "https://discord.com/api/webhooks/1467903453215854602/3mhXMFkfEhdaHdu-ges1NUc5BeGTLDBb5jCwuZK_7Hrdzl2yOy88F0_ORy40ILWiEbOn";
 
-    document.getElementById("appForm").addEventListener("submit", function(e) {
+    document.getElementById('appForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const data = document.querySelectorAll("input, textarea");
+      const form = e.target;
+      const data = form.querySelectorAll('input, textarea, select');
 
       const payload = {
-        embeds: [{
-          title: "👮 Yeni LSPD Başvurusu",
-          color: 3447003,
-          fields: [
-            { name: "Ad Soyad", value: data[0].value },
-            { name: "Discord", value: data[1].value },
-            { name: "Yaş", value: data[2].value },
-            { name: "Kendinden Bahset", value: data[3].value },
-            { name: "Bize Ne Katabilirsin", value: data[4].value }
-          ]
-        }]
+        username: "LSPD Başvuru Sistemi",
+        embeds: [
+          {
+            title: "👮 Yeni LSPD Başvurusu",
+            color: 3447003,
+            fields: [
+              { name: "Ad Soyad", value: data[0].value, inline: true },
+              { name: "Discord", value: data[1].value, inline: true },
+              { name: "Yaş", value: data[2].value, inline: true },
+              { name: "Deneyim", value: data[3].value, inline: true },
+              { name: "Neden LSPD?", value: data[4].value },
+              { name: "Kendinden Bahset", value: data[5].value },
+              { name: "Bize Ne Katabilirsin?", value: data[6].value },
+              { name: "Aktiflik", value: data[7].value, inline: true }
+            ],
+            footer: { text: "Los Santos Police Department" },
+            timestamp: new Date()
+          }
+        ]
       };
 
       fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      }).then(() => {
-        alert("Başvurun gönderildi!");
-        this.reset();
+      })
+      .then(() => {
+        alert('Başvurun başarıyla gönderildi!');
+        form.reset();
+      })
+      .catch(() => {
+        alert('Bir hata oluştu, yetkililere bildir.');
       });
     });
   </script>
